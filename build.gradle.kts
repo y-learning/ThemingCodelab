@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath(Libs.Gradle.plugin)
         classpath(Libs.Gradle.build)
+        classpath("com.android.tools.build:gradle:7.0.0-alpha04")
     }
 }
 
