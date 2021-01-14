@@ -30,7 +30,7 @@ android {
     buildToolsVersion("30.0.3")
 
     defaultConfig {
-        applicationId = "com.why.template.compose"
+        applicationId = "com.why.codelab.theming"
         minSdkVersion(22)
         targetSdkVersion(30)
         versionCode = 1

@@ -1,2 +1,2 @@
-rootProject.name = "Jetpack Compose Template"
+rootProject.name = "Theming Codelab"
 include(":android")

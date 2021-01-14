@@ -1,4 +1,4 @@
-package com.why.template.compose.view
+package com.why.codelab.theming.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
