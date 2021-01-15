@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.codelab.theming.R
 import com.why.codelab.theming.data.Post
 import com.why.codelab.theming.data.PostGatewayImp
+import com.why.codelab.theming.theme.JetnewsTheme
 import java.util.*
 
 @Composable
@@ -151,21 +152,19 @@ fun AppBar() {
 fun Home() {
     val featured = remember { PostGatewayImp.getFeaturedPost() }
     val posts = remember { PostGatewayImp.getPosts() }
-    MaterialTheme {
-        Scaffold(
-            topBar = { AppBar() }
-        ) { innerPadding ->
-            ScrollableColumn(contentPadding = innerPadding) {
-                Header(stringResource(R.string.top))
-                FeaturedPost(
-                    post = featured,
-                    modifier = Modifier.padding(16.dp)
-                )
-                Header(stringResource(R.string.popular))
-                posts.forEach { post ->
-                    PostItem(post = post)
-                    Divider(startIndent = 72.dp)
-                }
+    Scaffold(
+        topBar = { AppBar() }
+    ) { innerPadding ->
+        ScrollableColumn(contentPadding = innerPadding) {
+            Header(stringResource(R.string.top))
+            FeaturedPost(
+                post = featured,
+                modifier = Modifier.padding(16.dp)
+            )
+            Header(stringResource(R.string.popular))
+            posts.forEach { post ->
+                PostItem(post = post)
+                Divider(startIndent = 72.dp)
             }
         }
     }
@@ -175,8 +174,10 @@ fun Home() {
 @Composable
 private fun PostItemPreview() {
     val post = remember { PostGatewayImp.getFeaturedPost() }
-    Surface {
-        PostItem(post = post)
+    JetnewsTheme {
+        Surface {
+            PostItem(post = post)
+        }
     }
 }
 
@@ -184,11 +185,24 @@ private fun PostItemPreview() {
 @Composable
 private fun FeaturedPostPreview() {
     val post = remember { PostGatewayImp.getFeaturedPost() }
-    FeaturedPost(post = post)
+    JetnewsTheme {
+        FeaturedPost(post = post)
+    }
 }
 
-@Preview("Home")
+@Preview("Home - Light Theme")
 @Composable
 private fun HomePreview() {
-    Home()
+    JetnewsTheme {
+        Home()
+    }
+
+}
+
+@Preview("Home - Dark Theme")
+@Composable
+private fun HomeDarkPreview() {
+    JetnewsTheme(isDarkTheme = true) {
+        Home()
+    }
 }
