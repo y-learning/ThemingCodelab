@@ -37,53 +37,51 @@ import com.why.codelab.theming.data.PostGatewayImp
 import java.util.*
 
 @Composable
-fun Home() {
-    val featured = remember { PostGatewayImp.getFeaturedPost() }
-    val posts = remember { PostGatewayImp.getPosts() }
-    MaterialTheme {
-        Scaffold(
-            topBar = { AppBar() }
-        ) { innerPadding ->
-            ScrollableColumn(contentPadding = innerPadding) {
-                Header(stringResource(R.string.top))
-                FeaturedPost(
-                    post = featured,
-                    modifier = Modifier.padding(16.dp)
-                )
-                Header(stringResource(R.string.popular))
-                posts.forEach { post ->
-                    PostItem(post = post)
-                    Divider(startIndent = 72.dp)
-                }
+fun PostMetadata(
+    post: Post,
+    modifier: Modifier = Modifier
+) {
+    val divider = "  •  "
+    val tagDivider = "  "
+    val text = buildAnnotatedString {
+        append(post.metadata.date)
+        append(divider)
+        append(
+            stringResource(R.string.read_time, post.metadata.readTimeMinutes))
+        append(divider)
+        post.tags.forEachIndexed { index, tag ->
+            if (index != 0) {
+                append(tagDivider)
             }
+            append(" ${tag.toUpperCase(Locale.getDefault())} ")
         }
     }
-}
-
-@Composable
-private fun AppBar() {
-    TopAppBar(
-        navigationIcon = {
-            Icon(Icons.Rounded.Palette, Modifier.padding(horizontal = 12.dp))
-        },
-        title = {
-            Text(text = stringResource(R.string.app_title))
-        },
-        backgroundColor = MaterialTheme.colors.primary
+    Text(
+        text = text,
+        modifier = modifier
     )
 }
 
 @Composable
-fun Header(
-    text: String,
+fun PostItem(
+    post: Post,
     modifier: Modifier = Modifier
 ) {
-    Text(
-        text = text,
+    ListItem(
         modifier = modifier
-            .fillMaxWidth()
-            .background(Color.LightGray)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable { /* todo */ }
+            .padding(vertical = 8.dp),
+        icon = {
+            Image(
+                bitmap = imageResource(post.imageThumbId),
+            )
+        },
+        text = {
+            Text(text = post.title)
+        },
+        secondaryText = {
+            PostMetadata(post)
+        }
     )
 }
 
@@ -123,51 +121,54 @@ fun FeaturedPost(
 }
 
 @Composable
-private fun PostMetadata(
-    post: Post,
+fun Header(
+    text: String,
     modifier: Modifier = Modifier
 ) {
-    val divider = "  •  "
-    val tagDivider = "  "
-    val text = buildAnnotatedString {
-        append(post.metadata.date)
-        append(divider)
-        append(stringResource(R.string.read_time, post.metadata.readTimeMinutes))
-        append(divider)
-        post.tags.forEachIndexed { index, tag ->
-            if (index != 0) {
-                append(tagDivider)
-            }
-            append(" ${tag.toUpperCase(Locale.getDefault())} ")
-        }
-    }
     Text(
         text = text,
         modifier = modifier
+            .fillMaxWidth()
+            .background(Color.LightGray)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     )
 }
 
 @Composable
-fun PostItem(
-    post: Post,
-    modifier: Modifier = Modifier
-) {
-    ListItem(
-        modifier = modifier
-            .clickable { /* todo */ }
-            .padding(vertical = 8.dp),
-        icon = {
-            Image(
-                bitmap = imageResource(post.imageThumbId),
-            )
+fun AppBar() {
+    TopAppBar(
+        navigationIcon = {
+            Icon(Icons.Rounded.Palette, Modifier.padding(horizontal = 12.dp))
         },
-        text = {
-            Text(text = post.title)
+        title = {
+            Text(text = stringResource(R.string.app_title))
         },
-        secondaryText = {
-            PostMetadata(post)
-        }
+        backgroundColor = MaterialTheme.colors.primary
     )
+}
+
+@Composable
+fun Home() {
+    val featured = remember { PostGatewayImp.getFeaturedPost() }
+    val posts = remember { PostGatewayImp.getPosts() }
+    MaterialTheme {
+        Scaffold(
+            topBar = { AppBar() }
+        ) { innerPadding ->
+            ScrollableColumn(contentPadding = innerPadding) {
+                Header(stringResource(R.string.top))
+                FeaturedPost(
+                    post = featured,
+                    modifier = Modifier.padding(16.dp)
+                )
+                Header(stringResource(R.string.popular))
+                posts.forEach { post ->
+                    PostItem(post = post)
+                    Divider(startIndent = 72.dp)
+                }
+            }
+        }
+    }
 }
 
 @Preview("Post Item")
