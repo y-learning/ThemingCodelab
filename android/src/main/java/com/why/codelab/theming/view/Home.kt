@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.preferredHeightIn
+import androidx.compose.material.AmbientContentAlpha
 import androidx.compose.material.Card
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.ListItem
@@ -21,6 +23,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Providers
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -49,16 +52,17 @@ fun PostMetadata(
             stringResource(R.string.read_time, post.metadata.readTimeMinutes))
         append(divider)
         post.tags.forEachIndexed { index, tag ->
-            if (index != 0) {
-                append(tagDivider)
-            }
+            if (index != 0) append(tagDivider)
             append(" ${tag.toUpperCase(Locale.getDefault())} ")
         }
     }
-    Text(
-        text = text,
-        modifier = modifier
-    )
+    Providers(AmbientContentAlpha provides ContentAlpha.medium) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.body2,
+            modifier = modifier
+        )
+    }
 }
 
 @Composable
