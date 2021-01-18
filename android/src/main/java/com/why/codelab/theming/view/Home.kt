@@ -26,7 +26,9 @@ import androidx.compose.material.icons.filled.Highlight
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Providers
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -165,17 +167,22 @@ fun Header(
 }
 
 @Composable
-fun AppBar() {
+private fun ToggleDarkThemeButton(darkThemeState: MutableState<Boolean>) {
+    IconButton(onClick = {
+        darkThemeState.value = !darkThemeState.value
+    }) {
+        Icon(imageVector = Icons.Default.Highlight)
+    }
+}
+
+@Composable
+fun AppBar(darkThemeState: MutableState<Boolean>) {
     TopAppBar(
         navigationIcon = {
             Icon(Icons.Rounded.Palette, Modifier.padding(horizontal = 12.dp))
         },
         actions = {
-            IconButton(onClick = {
-
-            }) {
-                Icon(imageVector = Icons.Default.Highlight)
-            }
+            ToggleDarkThemeButton(darkThemeState)
         },
         title = {
             Text(text = stringResource(R.string.app_title))
@@ -186,12 +193,13 @@ fun AppBar() {
 
 @Composable
 fun Home(isDarkTheme: Boolean = false) {
+    val darkThemeState = remember { mutableStateOf(isDarkTheme) }
     val featured = remember { PostGatewayImp.getFeaturedPost() }
     val posts = remember { PostGatewayImp.getPosts() }
 
-    JetnewsTheme(isDarkTheme = isDarkTheme) {
+    JetnewsTheme(isDarkTheme = darkThemeState.value) {
         Scaffold(
-            topBar = { AppBar() }
+            topBar = { AppBar(darkThemeState) }
         ) { innerPadding ->
             ScrollableColumn(contentPadding = innerPadding) {
                 Header(stringResource(R.string.top))
