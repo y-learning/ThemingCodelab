@@ -157,22 +157,25 @@ fun AppBar() {
 }
 
 @Composable
-fun Home() {
+fun Home(isDarkTheme: Boolean = false) {
     val featured = remember { PostGatewayImp.getFeaturedPost() }
     val posts = remember { PostGatewayImp.getPosts() }
-    Scaffold(
-        topBar = { AppBar() }
-    ) { innerPadding ->
-        ScrollableColumn(contentPadding = innerPadding) {
-            Header(stringResource(R.string.top))
-            FeaturedPost(
-                post = featured,
-                modifier = Modifier.padding(16.dp)
-            )
-            Header(stringResource(R.string.popular))
-            posts.forEach { post ->
-                PostItem(post = post)
-                Divider(startIndent = 72.dp)
+
+    JetnewsTheme(isDarkTheme = isDarkTheme) {
+        Scaffold(
+            topBar = { AppBar() }
+        ) { innerPadding ->
+            ScrollableColumn(contentPadding = innerPadding) {
+                Header(stringResource(R.string.top))
+                FeaturedPost(
+                    post = featured,
+                    modifier = Modifier.padding(16.dp)
+                )
+                Header(stringResource(R.string.popular))
+                posts.forEach { post ->
+                    PostItem(post = post)
+                    Divider(startIndent = 72.dp)
+                }
             }
         }
     }
@@ -209,7 +212,5 @@ private fun HomePreview() {
 @Preview("Home - Dark Theme")
 @Composable
 private fun HomeDarkPreview() {
-    JetnewsTheme(isDarkTheme = true) {
-        Home()
-    }
+    Home(isDarkTheme = true)
 }
