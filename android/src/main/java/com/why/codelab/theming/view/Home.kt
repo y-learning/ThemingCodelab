@@ -138,7 +138,8 @@ fun Header(
             text = text,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            style = MaterialTheme.typography.subtitle2
         )
     }
 }
