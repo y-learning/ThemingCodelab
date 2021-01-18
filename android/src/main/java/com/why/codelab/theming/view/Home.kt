@@ -14,6 +14,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.ListItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -21,6 +22,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Highlight
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
@@ -30,7 +32,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codelab.theming.R
@@ -40,26 +44,40 @@ import com.why.codelab.theming.theme.JetnewsTheme
 import java.util.*
 
 @Composable
+private fun formatMetadataText(post: Post): AnnotatedString {
+    val metadata = post.metadata
+    val dotDivider = "  •  "
+    val tagsDivider = "  "
+
+    return buildAnnotatedString {
+        val tagStyle = MaterialTheme.typography.overline.toSpanStyle().copy(
+            background = MaterialTheme.colors.primary.copy(alpha = 0.1f)
+        )
+
+        append(metadata.date)
+        append(dotDivider)
+
+        append(stringResource(R.string.read_time, metadata.readTimeMinutes))
+        append(dotDivider)
+
+        post.tags.forEachIndexed { index, tag ->
+            if (index != 0) append(tagsDivider)
+
+            withStyle(tagStyle) {
+                append(" ${tag.toUpperCase(Locale.getDefault())} ")
+            }
+        }
+    }
+}
+
+@Composable
 fun PostMetadata(
     post: Post,
     modifier: Modifier = Modifier
 ) {
-    val divider = "  •  "
-    val tagDivider = "  "
-    val text = buildAnnotatedString {
-        append(post.metadata.date)
-        append(divider)
-        append(
-            stringResource(R.string.read_time, post.metadata.readTimeMinutes))
-        append(divider)
-        post.tags.forEachIndexed { index, tag ->
-            if (index != 0) append(tagDivider)
-            append(" ${tag.toUpperCase(Locale.getDefault())} ")
-        }
-    }
     Providers(AmbientContentAlpha provides ContentAlpha.medium) {
         Text(
-            text = text,
+            text = formatMetadataText(post),
             style = MaterialTheme.typography.body2,
             modifier = modifier
         )
@@ -149,6 +167,13 @@ fun AppBar() {
     TopAppBar(
         navigationIcon = {
             Icon(Icons.Rounded.Palette, Modifier.padding(horizontal = 12.dp))
+        },
+        actions = {
+            IconButton(onClick = {
+
+            }) {
+                Icon(imageVector = Icons.Default.Highlight)
+            }
         },
         title = {
             Text(text = stringResource(R.string.app_title))
